@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jupyter File Manager Mockup</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f6f6;
+            margin: 0;
+            padding: 0;
+            color: #296eaa;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #f6f6f6;
+            color: #296eaa;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .header img {
+            width: 50px;
+            margin-right: 10px;
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        .logout-btn {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: #296eaa;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ccc;
+            background-color: #f9f9f9;
+            color: #296eaa;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #296eaa;
+            border-right: 1px solid #ccc;
+        }
+
+        .tab.active {
+            font-weight: bold;
+            border-bottom: 2px solid #296eaa;
+        }
+
+        /* File Manager Container */
+        .file-manager {
+            padding: 20px;
+            max-width: 90%;
+            margin: auto;
+        }
+
+        /* File List */
+        .file-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .file-list th, .file-list td {
+            padding: 10px;
+            text-align: left;
+            color: #296eaa;
+        }
+
+        .file-list th {
+            background-color: #eee;
+            color: #296eaa;
+            font-weight: normal;
+        }
+
+        .file-list tr {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .file-list tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* File Icon and Name */
+        .file-name {
+            display: flex;
+            align-items: center;
+        }
+
+        .file-name i {
+            margin-right: 10px;
+            color: #666;
+        }
+
+        /* File Actions */
+        .actions {
+            display: flex;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .file-list tr:hover .actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            cursor: pointer;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .action-btn:hover {
+            color: #296eaa;
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Overlay background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #296eaa;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            font-size: 1.5em;
+            color: #aaa;
+        }
+
+        .close-btn:hover {
+            color: #296eaa;
+        }
+
+        .desktop-files {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
+            text-align: left;
+        }
+
+        .desktop-files li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header with Jupyter Logo -->
+    <div class="header">
+        <img src="https://jupyter.org/assets/homepage/main-logo.svg" alt="Jupyter Logo">
+        <h1>Jupyter</h1>
+        <button class="logout-btn">Logout</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active">Files</div>
+        <div class="tab">Running</div>
+        <div class="tab">Clusters</div>
+    </div>
+
+    <!-- File Manager -->
+    <div class="file-manager">
+        <table class="file-list">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Last Modified</th>
+                    <th>Size</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                     <tr>
+                    <td class="file-name">
+                        <i class="fas fa-folder"></i>
+                       <span onclick="openDesktopModal()" style="color: #296eaa; cursor: pointer;">Desktop</span> 
+
+                    </td>
+                    <td>2 minutes ago</td>
+                    <td></td>
+                    <td class="actions">
+                        <i class="fas fa-copy action-btn" title="Duplicate"></i>
+                        <i class="fas fa-edit action-btn" title="Rename"></i>
+                        <i class="fas fa-trash action-btn" title="Delete"></i>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="file-name"><i class="fas fa-folder"></i> Documents</td>
+                    <td>2 hours ago</td>
+                    <td></td>
+                    <td class="actions">
+                        <i class="fas fa-copy action-btn" title="Duplicate"></i>
+                        <i class="fas fa-edit action-btn" title="Rename"></i>
+                        <i class="fas fa-trash action-btn" title="Delete"></i>
+                    </td>
+                </tr>
+                
+<tbody>
+    <!-- Folder Entries -->
+   
+    <tr><td class="file-name"><i class="fas fa-folder"></i> Apple</td><td>2 years ago</td><td></td></tr>
+    
+    <tr><td class="file-name"><i class="fas fa-folder"></i> Contacts</td><td>3 years ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-folder"></i> Desktop</td><td>2 minutes ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-folder"></i> Documents</td><td>2 hours ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-folder"></i> Downloads</td><td>15 minutes ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-folder"></i> Favorites</td><td>3 years ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-folder"></i> Links</td><td>3 years ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-folder"></i> Music</td><td>a year ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-folder"></i> OneDrive</td><td>3 years ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-folder"></i> Pictures</td><td>9 months ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+  
+    
+    <tr><td class="file-name"><i class="fas fa-folder"></i> Saved Games</td><td>a year ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-folder"></i> scoop</td><td>3 months ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-folder"></i> Searches</td><td>3 years ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-folder"></i> Tracing</td><td>a year ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-folder"></i> Videos</td><td>6 months ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    
+    <!-- File Entries -->
+    <tr><td class="file-name"><i class="fas fa-file-alt"></i> Untitled.ipynb</td><td>a year ago</td><td>2.26 kB</td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-file-alt"></i> Untitled1.ipynb</td><td>2 months ago</td><td>10.3 kB</td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-file-alt"></i> Untitled2.ipynb</td><td>a month ago</td><td>5.05 kB</td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-file-alt"></i> Untitled3.ipynb</td><td>13 days ago</td><td>1.49 kB</td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-file-alt"></i> Untitled4.ipynb</td><td>7 days ago</td><td>1.15 kB</td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-file-alt"></i> Untitled5.ipynb</td><td>a day ago</td><td>86.5 kB</td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    
+    
+    
+    <tr><td class="file-name"><i class="fas fa-file-code"></i> Untitled-1.cpp</td><td>3 years ago</td><td>910 B</td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+    <tr><td class="file-name"><i class="fas fa-file-code"></i> Untitled-2.cpp</td><td>3 years ago</td><td></td>
+       <td class="actions">
+            <i class="fas fa-copy action-btn" title="Duplicate"></i>
+            <i class="fas fa-edit action-btn" title="Rename"></i>
+            <i class="fas fa-trash action-btn" title="Delete"></i>
+        </td></tr>
+<tr>
+                    <td class="file-name"><i class="fas fa-file-alt"></i> Untitled.ipynb</td>
+                    <td>1 day ago</td>
+                    <td>86.5 KB</td>
+                    <td class="actions">
+                        <i class="fas fa-copy action-btn" title="Duplicate"></i>
+                        <i class="fas fa-edit action-btn" title="Rename"></i>
+                        <i class="fas fa-trash action-btn" title="Delete"></i>
+                    </td>
+                </tr>
+</tbody>
+
+           
+        </table>
+</div>
+
+     <div id="desktopModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Desktop Folder</h2>
+                <span class="close-btn" onclick="closeDesktopModal()">&times;</span>
+            </div>
+            <ul class="desktop-files">
+                <li><i class="fas fa-file-code"></i> <a href="https://github.com/1alikadri/cool/blob/main/Untitled1.ipynb" target="_blank">Untitled-1.cpp</a></li>
+                <li><i class="fas fa-file-code"></i> <a href="https://github.com/1alikadri/cool/blob/main/Untitled2.ipynb" target="_blank">Untitled-2.cpp</a></li>
+                <li><i class="fas fa-file-alt"></i> <a href="https://github.com/1alikadri/cool/blob/main/Untitled3.ipynb" target="_blank">Untitled.ipynb</a></li>
+                <li><i class="fas fa-file-alt"></i> <a href="https://github.com/1alikadri/cool/blob/main/Untitled4.ipynb" target="_blank">Untitled5.ipynb</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function openDesktopModal() {
+            document.getElementById("desktopModal").style.display = "flex";
+        }
+
+        function closeDesktopModal() {
+            document.getElementById("desktopModal").style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            let modal = document.getElementById("desktopModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
